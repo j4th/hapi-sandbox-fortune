@@ -14,3 +14,17 @@ protected_paths:
   "**/bunfig.toml": { interactive: ask, unattended: deny, workers: deny }
   "**/tsconfig*.json": { interactive: ask, unattended: deny, workers: deny }
   "**/osv-scanner.toml": { interactive: ask, unattended: deny, workers: deny }
+
+# The sandbox's own settings (hapi-factory docs/runbooks/engine.md, "End to end on the sandbox").
+# A month's spend on this repo stops at $15, under the central $25.
+budgets:
+  repo_monthly_usd: 15
+# The smoke test's stub service: the central bun-http sidecar serves smoke/bakery/ (its server.ts and
+# fortunes.json), which the overlay makes a path workers may not write.
+sidecar:
+  name: bun-http
+  data_dir: smoke/bakery
+# Already the central default: Ready to merge needs the work order's acceptance tests to exist and pass.
+runs:
+  phases:
+    require_acceptance: true

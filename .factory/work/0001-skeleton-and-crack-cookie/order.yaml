@@ -1,0 +1,36 @@
+# Work order 0001, written by hand for hapi-factory's end-to-end run (docs/runbooks/engine.md).
+id: 0001-skeleton-and-crack-cookie
+lane: factory
+workflow: factory-task
+risk: low
+roles:
+  implement: large
+  review: medium
+# budget.usd is at least runs.phases.round_usd (1.00), or the review run is refused (H-259).
+budget:
+  usd: 2.00
+  turns: 40
+  minutes: 30
+pieces:
+  - id: skeleton
+    size: small
+    files:
+      - package.json
+      - bun.lock
+      - src/server.ts
+      - src/bakery.ts
+      - src/tools/health.ts
+      - tests/health.test.ts
+      - smoke/run.ts
+  - id: crack-cookie
+    size: small
+    files:
+      - src/tools/crack-cookie.ts
+      - tests/crack-cookie.test.ts
+verify:
+  smoke: true
+egress_extra: []
+trace:
+  traceparent: "00-93020ef32b565a182af44b47f6410232-666a9bddd8b50bd6-01"
+sources:
+  - docs/design/fortune-mcp.md

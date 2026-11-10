@@ -34,6 +34,7 @@ function parse(result: Awaited<ReturnType<typeof crack>>): Cookie {
 function checkShape(r: Cookie) {
   expect(fortunes).toContainEqual({ id: r.id, text: r.text });
   expect(r.lucky_numbers).toHaveLength(3);
+  expect(new Set(r.lucky_numbers).size).toBe(3);
   for (const n of r.lucky_numbers) {
     expect(Number.isInteger(n)).toBe(true);
     expect(n).toBeGreaterThanOrEqual(1);
@@ -66,4 +67,27 @@ test("crack_cookie is read-only", async () => {
   const { tools } = await client.listTools();
   expect(tools.find((t) => t.name === "crack_cookie")?.annotations?.readOnlyHint).toBe(true);
   await client.close();
+});
+
+test("lucky numbers are distinct across many seeds", async () => {
+  const { luckyNumbers, seededRandom } = await import("../src/tools/crack-cookie.ts");
+  for (let seed = 0; seed < 500; seed++) {
+    const ns = luckyNumbers(seededRandom(seed));
+    expect(new Set(ns).size).toBe(3);
+  }
+});
+
+test("a malformed fortune from the bakery is rejected", async () => {
+  const bad: Bakery = {
+    health: async () => true,
+    fortunes: async () => [{ id: "x", text: 5 } as unknown as Fortune],
+  };
+  const server = await createServer({ bakery: bad });
+  const [c, s] = InMemoryTransport.createLinkedPair();
+  await server.connect(s);
+  const client = new Client({ name: "test", version: "0.0.0" });
+  await client.connect(c);
+  const result = await client.callTool({ name: "crack_cookie", arguments: { seed: 1 } });
+  await client.close();
+  expect(result.isError).toBe(true);
 });

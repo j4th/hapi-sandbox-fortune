@@ -15,7 +15,19 @@ export function seededRandom(seed: number): () => number {
 }
 
 export function luckyNumbers(random: () => number): number[] {
-  return [0, 1, 2].map(() => 1 + Math.floor(random() * 49));
+  const pool = Array.from({ length: 49 }, (_, i) => i + 1);
+  const picked: number[] = [];
+  for (let k = 0; k < 3; k++) {
+    const i = Math.floor(random() * pool.length);
+    picked.push(pool.splice(i, 1)[0] as number);
+  }
+  return picked;
+}
+
+export function isFortune(value: unknown): value is { id: number; text: string } {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as { id?: unknown; text?: unknown };
+  return Number.isInteger(v.id) && typeof v.text === "string" && v.text.length > 0;
 }
 
 export function register(server: McpServer, bakery: Bakery): void {
@@ -31,6 +43,12 @@ export function register(server: McpServer, bakery: Bakery): void {
       const fortunes = await bakery.fortunes();
       const random = seed === undefined ? Math.random : seededRandom(seed);
       const fortune = fortunes[Math.floor(random() * fortunes.length)];
+      if (fortune !== undefined && !isFortune(fortune)) {
+        return {
+          content: [{ type: "text", text: JSON.stringify({ error: "the bakery served a malformed fortune" }) }],
+          isError: true,
+        };
+      }
       if (!fortune) {
         return {
           content: [{ type: "text", text: JSON.stringify({ error: "the bakery has no fortunes" }) }],

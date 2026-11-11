@@ -1,0 +1,26 @@
+# Work order 0003, written by hand for hapi-factory's end-to-end run (docs/runbooks/engine.md).
+id: 0003-fortune-of-the-day
+lane: factory
+workflow: factory-task
+risk: low
+roles:
+  implement: large
+  review: medium
+# budget.usd is at least runs.phases.round_usd (1.00), or the review run is refused (H-259).
+budget:
+  usd: 2.00
+  turns: 40
+  minutes: 30
+pieces:
+  - id: fortune-of-the-day
+    size: small
+    files:
+      - src/tools/fortune-of-the-day.ts
+      - tests/fortune-of-the-day.test.ts
+verify:
+  smoke: true
+egress_extra: []
+trace:
+  traceparent: "00-f9a0ae57603b1b49f6cc5acecd9371ad-0cd016b755102fe6-01"
+sources:
+  - docs/design/fortune-mcp.md

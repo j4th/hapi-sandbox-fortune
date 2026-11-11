@@ -1,0 +1,26 @@
+# Work order 0002, written by hand for hapi-factory's end-to-end run (docs/runbooks/engine.md).
+id: 0002-search-fortunes
+lane: factory
+workflow: factory-task
+risk: low
+roles:
+  implement: large
+  review: medium
+# budget.usd is at least runs.phases.round_usd (1.00), or the review run is refused (H-259).
+budget:
+  usd: 2.00
+  turns: 40
+  minutes: 30
+pieces:
+  - id: search-fortunes
+    size: small
+    files:
+      - src/tools/search-fortunes.ts
+      - tests/search-fortunes.test.ts
+verify:
+  smoke: true
+egress_extra: []
+trace:
+  traceparent: "00-6f3f13274a34291e3bcbce9719eed285-41b2a03f18cf1861-01"
+sources:
+  - docs/design/fortune-mcp.md

@@ -28,3 +28,6 @@ sidecar:
 runs:
   phases:
     require_acceptance: true
+    # CodeRabbit's CLI reviews each work order's commits in the review run (hapi-factory
+    # docs/runbooks/provider-keys.md): its critical or major finding starts the one fix round before the PR.
+    coderabbit: true

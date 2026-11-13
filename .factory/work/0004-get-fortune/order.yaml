@@ -1,0 +1,27 @@
+# Work order 0004, written by hand for hapi-factory's check of CodeRabbit's CLI in the review run (docs/runbooks/engine.md).
+id: 0004-get-fortune
+lane: factory
+workflow: factory-task
+risk: low
+roles:
+  implement: large
+  review: medium
+# budget.usd is at least runs.phases.round_usd (1.00), or the review run is refused (H-259).
+# budget.minutes also bounds CodeRabbit's CLI: it gets the review run's time left, less 120 s.
+budget:
+  usd: 2.00
+  turns: 40
+  minutes: 30
+pieces:
+  - id: get-fortune
+    size: small
+    files:
+      - src/tools/get-fortune.ts
+      - tests/get-fortune.test.ts
+verify:
+  smoke: true
+egress_extra: []
+trace:
+  traceparent: "00-cb7ccf4e6e219a053146124675c6b67b-c0cd46449096235c-01"
+sources:
+  - docs/design/fortune-mcp.md
